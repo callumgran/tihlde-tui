@@ -18,7 +18,7 @@ class HomeScreen(BaseScreen):
 
         yield Container(
             Static(f"[bold green]Welcome, {first_name} {last_name}![/bold green]", classes="welcome-message"),
-            Static("Explore events, career opportunities, news, and more!", id="description"),
+            Static("Explore the TIHLDE website with an inTUItive design :)", id="description"),
             id="home-container",
         )
 
