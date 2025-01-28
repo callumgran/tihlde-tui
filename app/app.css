@@ -1,66 +1,85 @@
 Screen {
-	layout: vertical;
+    layout: vertical;
 }
-Container#header {
-	height: auto;
-	width: 100%;
-	layout: horizontal;
-	align: center middle;
-	padding: 1 1;
-	border-bottom: solid white;
-}
-Container#content {
-	height: 1fr;
-	width: 100%;
-	padding: 1;
-	align: center middle;  /* Align content in the center */
-}
+
 Container#home-container {
 	layout: vertical;
 	align: center middle;
 }
+
+Container#header {
+    height: auto;
+    width: 100%;
+    layout: horizontal;
+    align: center middle;
+    padding: 1 1;
+    border-bottom: solid white;
+}
+
 Static.welcome-message {
 	text-align: center;
 	margin: 1 0;
 }
+
 Static#description {
 	text-align: center;
 	margin: 1 0;
 }
-Button {
-	width: auto;
-	margin: 1;
+
+Container#content {
+    height: 1fr;
+    width: 100%;
+    layout: vertical;
+    padding: 1;
 }
+
+Container#filters-container {
+    layout: horizontal;
+    width: 100%;
+    align: center middle;
+    padding: 1 0;
+    margin-bottom: 1;
+}
+
 Container#events-container {
-	layout: vertical;
-	height: 1fr;
-	overflow: scroll;
-	padding: 1;
-	background: black;
+    layout: vertical;
+    height: 5fr; /* Takes the remaining vertical space */
+    overflow: auto; /* Scrollable */
+    padding: 1;
+    background: black;
 }
+
 Container.event-container {
-	layout: horizontal;
-	width: 100%;
-	height: 50%;
-	margin: 1;
-	background: #202020;
-	border: white;
+    layout: vertical;
+    width: 100%;
+    height: auto; /* Adjusts to content */
+    margin: 1 0; /* Adds vertical spacing between events */
+    background: #202020;
+    border: solid white; /* Adds a border */
+    padding: 1;
 }
+
 Container.button-container {
-	align: right middle;
+    align: right middle;
 }
-Container#event-details-container {
-	layout: vertical;
+
+Container#pagination-container {
+    layout: horizontal;
+    align: center middle; /* Centers pagination buttons */
 	height: 1fr;
-	overflow: auto;
-	padding: 1;
-	align: left middle;
+    padding: 1 0;
+    margin-top: 1;
 }
+
+Button {
+    width: auto;
+    margin: 1 0; /* Adds vertical spacing between buttons */
+}
+
 Container#event-details-container {
-	layout: vertical;
-	height: 1fr;
-	overflow: auto;
-	padding: 1;
-	background: black;
-	align: left middle;
+    layout: vertical;
+    height: 1fr;
+    overflow: auto; /* Allows scrolling if content exceeds height */
+    padding: 1;
+    background: black;
 }

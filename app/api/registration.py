@@ -26,7 +26,7 @@ async def unregister_from_event(event_id: str, token: str, username: str):
     url = f"{API_BASE_URL}/events/{event_id}/registrations/{username}/"
     try:
         async with httpx.AsyncClient() as client:
-            response = client.delete(url, headers={"x-csrf-token": token})
-            return response.status_code == 204
+            response = await client.delete(url, headers={"x-csrf-token": token})
+            return response.status_code == 200
     except httpx.RequestError:
         return False

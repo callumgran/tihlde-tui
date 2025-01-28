@@ -1,19 +1,31 @@
 import httpx
 from app.config import API_EVENTS_URL
 
-async def fetch_events(token: str):
+
+async def fetch_events(token, expired=False, activity=False, page=1):
     """
-    Asynchronously fetch events data using the provided token.
+    Fetch events with optional filters and pagination.
+
     Args:
-        token (str): The authentication token (x-csrf-token).
+        token (str): The authentication token.
+        expired (bool): Whether to fetch expired events.
+        activity (bool): Whether to fetch activities.
+        page (int): The page number to fetch.
+
     Returns:
-        list: A list of events if successful, or an empty list if an error occurs.
+        list: A list of events.
     """
     try:
+        params = {
+            "expired": str(expired).lower(),
+            "activity": str(activity).lower(),
+            "page": page,
+        }
         async with httpx.AsyncClient() as client:
             response = await client.get(
                 API_EVENTS_URL,
-                headers={"x-csrf-token": token}
+                params=params,
+                headers={"x-csrf-token": token},
             )
             response.raise_for_status()
             return response.json().get("results", [])
