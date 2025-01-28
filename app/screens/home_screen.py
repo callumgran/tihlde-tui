@@ -5,10 +5,8 @@ from app.api import fetch_user_data
 
 
 class HomeScreen(BaseScreen):
-    """Main home screen for navigation."""
 
     def compose(self):
-        """Define the layout for the home screen."""
         yield from super().compose()
         
         if not self.app.context.get_user_data():
@@ -25,5 +23,4 @@ class HomeScreen(BaseScreen):
         )
 
     def on_button_pressed(self, event):
-        """Handle button presses for home-specific actions."""
         super().on_button_pressed(event)

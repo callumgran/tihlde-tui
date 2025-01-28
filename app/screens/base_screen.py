@@ -4,10 +4,8 @@ from textual.widgets import Header, Footer, Button
 
 
 class BaseScreen(Screen):
-    """Base screen that includes a header and footer."""
 
     def compose(self):
-        """Define the base layout with header, footer, and a content container."""
         yield Header()
         yield Container(
             Button("Home", id="home", variant="primary"),
@@ -19,8 +17,8 @@ class BaseScreen(Screen):
             id="header",
         )
 
+
     def on_button_pressed(self, event):
-        """Handle button presses in the menu."""
         button_map = {
             "home": lambda: self.app.switch_to_home(),
             "events": lambda: self.app.show_events(),

@@ -7,7 +7,6 @@ from app.api.registration import register_for_event, unregister_from_event, chec
 
 
 class EventDetailsScreen(BaseScreen):
-    """Screen to display event details."""
 
     def __init__(self, event_id):
         super().__init__()
@@ -17,17 +16,14 @@ class EventDetailsScreen(BaseScreen):
         self.status_label = Label("", id="status-message")
 
     def compose(self):
-        """Compose the layout with BaseScreen's header and the details container."""
         yield from super().compose()
         yield self.details_container
         yield self.status_label
 
     async def on_mount(self):
-        """Load event details when the screen is mounted."""
         await self.load_event_details()
 
     async def load_event_details(self):
-        """Fetch and display event details."""
         self.details_container.remove_children()
         self.details_container.mount(LoadingIndicator())
 
@@ -44,7 +40,6 @@ class EventDetailsScreen(BaseScreen):
             self.details_container.mount(Label(f"[bold red]Error loading event details: {e}[/bold red]"))
 
     def render_event_details(self, event, user_registered):
-        """Render the event details."""
         self.details_container.remove_children()
 
         details = (
@@ -72,7 +67,6 @@ class EventDetailsScreen(BaseScreen):
             self.details_container.mount(Button("Back", id="back-to-events", variant="warning"))
 
     async def handle_registration_action(self):
-        """Handle sign-up or sign-off actions."""
         try:
             if not self.signed_up:
                 success = await register_for_event(self.event_id, self.app.token)
@@ -92,7 +86,6 @@ class EventDetailsScreen(BaseScreen):
             self.status_label.update(f"[bold red]Error: {e}[/bold red]")
 
     async def on_button_pressed(self, event):
-        """Handle button presses."""
         if event.button.id in ["sign-up", "sign-off"]:
             await self.handle_registration_action()
         elif event.button.id == "back-to-events":

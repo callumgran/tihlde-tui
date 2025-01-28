@@ -3,18 +3,6 @@ from app.config import API_EVENTS_URL
 
 
 async def fetch_events(token, expired=False, activity=False, page=1):
-    """
-    Fetch events with optional filters and pagination.
-
-    Args:
-        token (str): The authentication token.
-        expired (bool): Whether to fetch expired events.
-        activity (bool): Whether to fetch activities.
-        page (int): The page number to fetch.
-
-    Returns:
-        list: A list of events.
-    """
     try:
         params = {
             "expired": str(expired).lower(),

@@ -16,26 +16,21 @@ class TIHLDETUI(App):
         self.context = AppContext()
 
     def on_mount(self):
-        """Load the appropriate screen based on login status."""
         if self.token:
             self.push_screen(HomeScreen())
         else:
             self.push_screen(LoginScreen())
 
     def switch_to_home(self):
-        """Switch to the home screen."""
         self.push_screen(HomeScreen())
 
     def show_events(self):
-        """Switch to the events screen."""
         self.push_screen(EventsScreen())
 
     def show_event_details(self, event_id):
-        """Switch to the event details screen."""
         self.push_screen(EventDetailsScreen(event_id))
 
     def logout(self):
-        """Handle user logout."""
         self.token = None
         self.pop_screen()
         self.push_screen(LoginScreen())
