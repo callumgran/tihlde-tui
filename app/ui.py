@@ -12,7 +12,7 @@ from app.components import (
 from app.utils import load_token
 from app.actions import handle_login, handle_logout
 from app.context import AppContext
-from app.api import fetch_user_data, fetch_event_details
+from app.api import fetch_user_data
 
 class TIHLDETUI(App):
     CSS = """
@@ -67,13 +67,20 @@ class TIHLDETUI(App):
     Container.button-container {
         align: right middle;
     }
-    Container.event-details-container {
+    Container#event-details-container {
         layout: vertical;
-        height: auto;
-        overflow: scroll;
-        text-align: center;
-        align: center middle;
+        height: 1fr;
+        overflow: auto;
         padding: 1;
+        align: left middle;
+    }
+    Container#event-details-container {
+        layout: vertical;
+        height: 1fr;
+        overflow: auto;
+        padding: 1;
+        background: black;
+        align: left middle;
     }
     """
 
@@ -84,7 +91,7 @@ class TIHLDETUI(App):
         self.context = AppContext()
 
         if self.token:
-            fetch_user_data(self, self.token)
+            self.context.set_user_data(fetch_user_data(self.token))
 
         self.view_map = {
             "login_view": create_login_view,
@@ -157,8 +164,7 @@ class TIHLDETUI(App):
 
         if event.button.id and event.button.id.startswith("event-"):
             event_id = event.button.id.split("-")[1]
-            event_data = fetch_event_details(self, event_id, self.token)
-            self.switch_view("event_details_view", data=event_data)
+            self.switch_view("event_details_view", data=event_id)
             return
 
         action = button_map.get(event.button.id)
@@ -166,13 +172,13 @@ class TIHLDETUI(App):
             action()
         else:
             self.log(f"Unknown button pressed: {event.button.id}")
-
+    
     def login(self, username: str, password: str):
         """Handle login."""
         handle_login(self, username, password)
 
         if self.token:
-            fetch_user_data(self, self.token)
+            self.context.set_user_data(fetch_user_data(self.token))
 
         self.update_header_visibility()
         self.switch_view("home_view")

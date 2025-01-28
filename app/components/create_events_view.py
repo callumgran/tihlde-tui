@@ -1,5 +1,5 @@
 from textual.containers import Container
-from textual.widgets import Label, Button, Static
+from textual.widgets import Label, Button, Static, LoadingIndicator
 from app.api import fetch_events
 from app.utils import pretty_print_date
 
@@ -23,29 +23,32 @@ def create_event_widget(event):
         Label(event_details),
         Container(
             Button(f"More Info", id=f"event-{event['id']}", variant="primary"),
-            classes="button-container",  # Add a class for styling
+            classes="button-container",
         ),
         classes="event-container",
     )
 
-def create_events_view(app=None):
+def create_events_view(app):
     """
-    Creates a simple events view that displays events in a scrollable layout.
+    Creates an events view that displays events in a scrollable layout.
     Args:
-        app: The main application instance (optional, for access to token).
+        app: The main application instance.
     Returns:
         Container: The container with the events list.
     """
-    events = fetch_events(app.token) if app else []
-    event_widgets = [create_event_widget(event) for event in events]
+    events_container = Container(id="events-container")
 
-    if not event_widgets:
-        return Container(
-            Static("[bold red]No events available at the moment.[/bold red]"),
-            id="events-container",
-        )
+    async def load_events():
+        events_container.mount(LoadingIndicator())
+        events = await fetch_events(app.token)
+        event_widgets = [create_event_widget(event) for event in events]
+        events_container.remove_children()
+        if event_widgets:
+            events_container.mount(*event_widgets)
+        else:
+            events_container.mount(
+                Static("[bold red]No events available at the moment.[/bold red]")
+            )
 
-    return Container(
-        *event_widgets,
-        id="events-container",
-    )
+    app.call_later(load_events)
+    return events_container

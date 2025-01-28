@@ -1,23 +1,22 @@
-import requests
+import httpx
 from app.config import API_USER_DATA_URL
 
-def fetch_user_data(app, token: str):
+def fetch_user_data(token: str):
     """
-    Fetch user data using the provided token and save it in the app context.
+    Fetch user data using the provided token.
     Args:
-        app (TIHLDEApp): The main application instance.
         token (str): The authentication token.
+    Returns:
+        dict: The user data if successful, or an empty dictionary if an error occurs.
     """
-    
     try:
-        response = requests.get(
-            API_USER_DATA_URL, 
-            headers={"x-csrf-token": f"{token}"}
-        )
-        
-        response.raise_for_status()
-        user_data = response.json()
-        app.context.set_user_data(user_data)
-        app.log("User data fetched and saved.")
-    except requests.exceptions.RequestException as e:
-        app.log(f"Error fetching user data: {e}")
+        with httpx.Client() as client:
+            response = client.get(
+                API_USER_DATA_URL, 
+                headers={"x-csrf-token": f"{token}"}
+            )
+            response.raise_for_status()
+            return response.json()
+    except httpx.RequestError as e:
+        print(f"Error fetching user data: {e}")
+        return {}

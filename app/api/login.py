@@ -1,4 +1,4 @@
-import requests
+import httpx
 from app.config import API_LOGIN_URL
 
 def login(username: str, password: str):
@@ -11,11 +11,13 @@ def login(username: str, password: str):
         dict: A dictionary containing the authentication token if successful, or an error message.
     """
     try:
-        response = requests.post(
-            API_LOGIN_URL,
-            json={"user_id": username, "password": password}
-        )
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
+        with httpx.Client() as client:
+            response = client.post(
+                API_LOGIN_URL,
+                json={"user_id": username, "password": password}
+            )
+            response.raise_for_status()
+            return response.json()
+    except httpx.RequestError as e:
+        print(f"Error logging in: {e}")
         return {"error": str(e)}
