@@ -1,0 +1,5 @@
+from .create_login_view import create_login_view
+from .create_events_view import create_events_view
+from .create_careers_view import create_careers_view
+from .create_news_view import create_news_view
+from .create_home_view import create_home_view
