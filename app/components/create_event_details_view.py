@@ -1,11 +1,12 @@
-from textual.containers import Container, Vertical
+from textual.app import App
+from textual.containers import Container
 from textual.widgets import Label, Button, Markdown, LoadingIndicator
 from app.utils import pretty_print_date
 from app.api import fetch_event_details
-from app.api.registration import check_registration_status
+from app.api.registration import check_registration_status, register_for_event, unregister_from_event
 
 
-def create_event_details_view(app, event_id: str):
+def create_event_details_view(app: App, event_id: str):
     details_container = Container(id="event-details-container", classes="event-details")
 
     async def load_event_details():
@@ -39,5 +40,26 @@ def create_event_details_view(app, event_id: str):
             details_container.remove_children()
             details_container.mount(Label(f"[bold red]Error loading event details: {e}[/bold red]"))
 
+    async def handle_registration_action(action: str):
+        try:
+            if action == "sign-up":
+                success = await register_for_event(event_id, app.token)
+                if success:
+                    app.log("Successfully signed up for event.")
+            elif action == "sign-off":
+                success = await unregister_from_event(event_id, app.token, app.context.get_user_data()["user_id"])
+                if success:
+                    app.log("Successfully signed off from event.")
+            await load_event_details()
+        except Exception as e:
+            app.log(f"Error handling registration action: {e}")
+
+    async def on_button_pressed(event):
+        if event.button.id in ["sign-up", "sign-off"]:
+            await handle_registration_action(event.button.id)
+
+    app.on_event(Button.Pressed)
+
     app.call_later(load_event_details)
+
     return details_container
