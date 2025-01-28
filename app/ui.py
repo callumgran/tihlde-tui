@@ -7,13 +7,14 @@ from app.components import (
     create_careers_view,
     create_news_view,
     create_home_view,
+    create_event_details_view,
 )
 from app.utils import load_token
 from app.actions import handle_login, handle_logout
 from app.context import AppContext
-from app.api import fetch_user_data, fetch_events
+from app.api import fetch_user_data, fetch_event_details
 
-class TIHLDEApp(App):
+class TIHLDETUI(App):
     CSS = """
     Screen {
         layout: vertical;
@@ -58,13 +59,21 @@ class TIHLDEApp(App):
     Container.event-container {
         layout: horizontal;
         width: 100%;
-        height: 80%;
+        height: 50%;
         margin: 1;
         background: #202020;
         border: white;
     }
     Container.button-container {
         align: right middle;
+    }
+    Container.event-details-container {
+        layout: vertical;
+        height: auto;
+        overflow: scroll;
+        text-align: center;
+        align: center middle;
+        padding: 1;
     }
     """
 
@@ -110,7 +119,7 @@ class TIHLDEApp(App):
         """Show or hide the header based on the token."""
         self.header.visible = bool(self.token)
 
-    def switch_view(self, view_name: str) -> None:
+    def switch_view(self, view_name: str, data: dict = None) -> None:
         """Switch between different views."""
         if self.current_view == view_name:
             self.log(f"Already on view: {view_name}")
@@ -120,15 +129,15 @@ class TIHLDEApp(App):
         content.remove_children()
 
         self.log(f"Switching to view: {view_name}")
-        view_function = self.view_map.get(view_name)
-
-        if not view_function:
-            self.log(f"Unknown view: {view_name}")
-            return
-
-        content.mount(view_function(self))
+        if view_name == "event_details_view":
+            content.mount(create_event_details_view(self, data))
+        else:
+            view_function = self.view_map.get(view_name)
+            if view_function:
+                content.mount(view_function(self))
+            else:
+                self.log(f"Unknown view: {view_name}")
         self.current_view = view_name
-
 
     def on_button_pressed(self, event):
         """Handle button presses."""
@@ -143,7 +152,14 @@ class TIHLDEApp(App):
             "news": lambda: self.switch_view("news_view"),
             "logout": lambda: self.logout(),
             "exit": lambda: self.exit(),
+            "back-to-events": lambda: self.switch_view("events_view"),
         }
+
+        if event.button.id and event.button.id.startswith("event-"):
+            event_id = event.button.id.split("-")[1]
+            event_data = fetch_event_details(self, event_id, self.token)
+            self.switch_view("event_details_view", data=event_data)
+            return
 
         action = button_map.get(event.button.id)
         if action:

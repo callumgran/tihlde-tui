@@ -1,5 +1,5 @@
 from textual.containers import Container
-from textual.widgets import Label, Button
+from textual.widgets import Label, Button, Static
 from app.api import fetch_events
 from app.utils import pretty_print_date
 
