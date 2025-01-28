@@ -10,7 +10,8 @@ from app.components import (
 )
 from app.utils import load_token
 from app.actions import handle_login, handle_logout
-
+from app.context import AppContext
+from app.api import fetch_user_data
 
 class TIHLDEApp(App):
     CSS = """
@@ -53,6 +54,10 @@ class TIHLDEApp(App):
         super().__init__(**kwargs)
         self.token = load_token()
         self.current_view = None
+        self.context = AppContext()
+
+        if self.token:
+            fetch_user_data(self, self.token)
 
         self.view_map = {
             "login_view": create_login_view,
@@ -103,7 +108,7 @@ class TIHLDEApp(App):
             self.log(f"Unknown view: {view_name}")
             return
 
-        content.mount(view_function())
+        content.mount(view_function(self))
         self.current_view = view_name
 
 
@@ -131,6 +136,10 @@ class TIHLDEApp(App):
     def login(self, username: str, password: str):
         """Handle login."""
         handle_login(self, username, password)
+
+        if self.token:
+            fetch_user_data(self, self.token)
+
         self.update_header_visibility()
         self.switch_view("home_view")
 
@@ -138,5 +147,6 @@ class TIHLDEApp(App):
         """Handle logout."""
         handle_logout(self)
         self.token = None
+        self.context.clear()
         self.update_header_visibility()
         self.switch_view("login_view")

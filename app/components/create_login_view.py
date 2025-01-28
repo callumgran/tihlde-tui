@@ -1,7 +1,7 @@
 from textual.containers import Container
 from textual.widgets import Static, Label, Input, Button
 
-def create_login_view():
+def create_login_view(app=None):
     """Creates the widgets for the login view."""
     return Container(
         Static("[bold green]Welcome to the TIHLDE Terminal Application[/bold green]", classes="welcome-message"),
