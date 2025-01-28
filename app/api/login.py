@@ -1,7 +1,7 @@
 import requests
 from app.config import API_LOGIN_URL
 
-def login(username, password):
+def login(username: str, password: str):
     """
     Sends a POST request to the TIHLDE login endpoint to authenticate the user.
     Args:

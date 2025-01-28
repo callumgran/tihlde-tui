@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from datetime import datetime
 
 TOKEN_FILE = Path.home() / ".tihlde_token"
 
@@ -39,3 +40,20 @@ def delete_token():
             TOKEN_FILE.unlink()
     except Exception as e:
         print(f"Failed to delete token: {e}")
+
+def pretty_print_date(date_string):
+    """
+    Convert a date string in ISO 8601 format to a pretty-printed format.
+    Args:
+        date_string (str): The ISO 8601 date string (e.g., '2025-01-30T18:00:00+01:00').
+    Returns:
+        str: A pretty-printed date (e.g., 'January 30, 2025, 6:00 PM').
+    """
+    try:
+        # Parse the ISO 8601 date string
+        dt = datetime.fromisoformat(date_string)
+        # Format it into a more user-friendly string
+        pretty_date = dt.strftime("%B %d, %Y, %-I:%M %p")
+        return pretty_date
+    except ValueError:
+        return "Invalid Date"

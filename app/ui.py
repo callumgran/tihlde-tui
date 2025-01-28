@@ -11,7 +11,7 @@ from app.components import (
 from app.utils import load_token
 from app.actions import handle_login, handle_logout
 from app.context import AppContext
-from app.api import fetch_user_data
+from app.api import fetch_user_data, fetch_events
 
 class TIHLDEApp(App):
     CSS = """
@@ -47,6 +47,28 @@ class TIHLDEApp(App):
     Button {
         width: auto;
         margin: 1;
+    }
+    Container#events-container {
+        layout: vertical;
+        height: 1fr;
+        overflow: scroll;
+        padding: 1;
+        background: black;
+    }
+    Container.event-container {
+        layout: horizontal;
+        width: 100%;
+        height: auto;
+        padding: 1;
+        margin-bottom: 1;
+        background: #202020;  /* Dark background for better contrast */
+        border: round white;
+    }
+    Static.event-title {
+        color: white;
+        padding: 1;
+        text-align: left;
+        width: 1fr;  /* Ensures the text takes remaining space */
     }
     """
 
