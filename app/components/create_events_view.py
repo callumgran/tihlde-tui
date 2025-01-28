@@ -1,5 +1,5 @@
 from textual.containers import Container
-from textual.widgets import Static, Button
+from textual.widgets import Label, Button
 from app.api import fetch_events
 from app.utils import pretty_print_date
 
@@ -20,8 +20,11 @@ def create_event_widget(event):
     )
 
     return Container(
-        Static(event_details, classes="event-details"),
-        Button(f"More Info", id=f"event-{event['id']}", variant="primary"),
+        Label(event_details),
+        Container(
+            Button(f"More Info", id=f"event-{event['id']}", variant="primary"),
+            classes="button-container",  # Add a class for styling
+        ),
         classes="event-container",
     )
 

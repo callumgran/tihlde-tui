@@ -58,17 +58,13 @@ class TIHLDEApp(App):
     Container.event-container {
         layout: horizontal;
         width: 100%;
-        height: auto;
-        padding: 1;
-        margin-bottom: 1;
-        background: #202020;  /* Dark background for better contrast */
-        border: round white;
+        height: 80%;
+        margin: 1;
+        background: #202020;
+        border: white;
     }
-    Static.event-title {
-        color: white;
-        padding: 1;
-        text-align: left;
-        width: 1fr;  /* Ensures the text takes remaining space */
+    Container.button-container {
+        align: right middle;
     }
     """
 
